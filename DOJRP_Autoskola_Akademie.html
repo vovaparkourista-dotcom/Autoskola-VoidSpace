@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Void Space DOJRP - Kompletní interaktivní učební materiály pro autoškolu, kategorie B">
+  <title>Void Space DOJRP © - Autoškola Akademie</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Exo+2:wght@300;400;500;700&display=swap" rel="stylesheet">
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Exo+2:wght@300;400;500;700&display=swap');
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --vs-bg: #0a0c10;
+      --vs-surface: #10141a;
+      --vs-card: #151b24;
+      --vs-border: #1e2d3d;
+      --vs-blue: #00a8ff;
+      --vs-cyan: #00e5ff;
+      --vs-amber: #ffc107;
+      --vs-red: #ff3b47;
+      --vs-green: #00e676;
+      --vs-text: #e8edf2;
+      --vs-muted: #7a8fa3;
+      --vs-glow: 0 0 20px rgba(0,168,255,0.25);
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .vs-root {
+      background: var(--vs-bg);
+      color: var(--vs-text);
+      font-family: 'Exo 2', sans-serif;
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .grid-bg {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image:
+        linear-gradient(rgba(0,168,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,168,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .scanline {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.08) 2px,
+        rgba(0,0,0,0.08) 4px
+      );
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .content-wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 16px 40px;
+    }
+
+    /* HEADER */
+    .header {
+      padding: 28px 0 20px;
+      border-bottom: 1px solid var(--vs-border);
+      margin-bottom: 28px;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .badge-vs {
+      background: var(--vs-blue);
+      color: #000;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      padding: 4px 10px;
+      border-radius: 2px;
+    }
+
+    .header-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 30px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 1px;
+      line-height: 1;
+    }
+
+    .header-title span { color: var(--vs-cyan); }
+
+    .header-sub {
+      font-size: 13px;
+      color: var(--vs-muted);
+      letter-spacing: 0.5px;
+      font-family: 'Share Tech Mono', monospace;
+    }
+
+    .header-stats {
+      display: flex;
+      gap: 24px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .hstat {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--vs-muted);
+    }
+
+    .hstat-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+    }
+
+    /* NAV TABS */
+    .nav-tabs {
+      display: flex;
+      gap: 4px;
+      background: var(--vs-surface);
+      border: 1px solid var(--vs-border);
+      border-radius: 4px;
+      padding: 4px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .nav-tab {
+      padding: 8px 14px;
+      font-family: 'Exo 2', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      background: transparent;
+      color: var(--vs-muted);
+      transition: all 0.18s;
+      white-space: nowrap;
+    }
+
+    .nav-tab:hover { color: var(--vs-text); background: rgba(255,255,255,0.04); }
+
+    .nav-tab.active {
+      background: var(--vs-blue);
+      color: #000;
+      font-weight: 700;
+    }
+
+    /* PANELS */
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    /* SECTION TITLE */
+    .sec-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--vs-cyan);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sec-title::before {
+      content: '';
+      display: inline-block;
+      width: 3px;
+      height: 18px;
+      background: var(--vs-blue);
+      border-radius: 2px;
+    }
+
+    /* INFO CARD */
+    .info-card {
+      background: var(--vs-card);
+      border: 1px solid var(--vs-border);
+      border-radius: 6px;
+      padding: 18px 20px;
+      margin-bottom: 14px;
+      transition: border-color 0.2s;
+    }
+
+    .info-card:hover { border-color: rgba(0,168,255,0.35); }
+
+    .info-card-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ic-num {
+      background: rgba(0,168,255,0.15);
+      color: var(--vs-blue);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 2px;
+      border: 1px solid rgba(0,168,255,0.3);
+    }
+
+    .info-card p {
+      font-size: 14px;
+      color: var(--vs-muted);
+      line-height: 1.65;
+    }
+
+    .info-card p strong {
+      color: var(--vs-amber);
+      font-weight: 600;
+    }
+
+    /* RULE GRID */
+    .rule-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .rule-box {
+      background: var(--vs-card);
+      border: 1px solid var(--vs-border);
+      border-radius: 6px;
+      padding: 16px;
+    }
+
+    .rule-box-icon {
+      font-size: 22px;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .rule-box h4 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .rule-box p {
+      font-size: 12px;
+      color: var(--vs-muted);
+      line-height: 1.6;
+    }
+
+    /* SPEED LIMITS VISUAL */
+    .speed-grid {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .speed-sign {
+      width: 90px;
+      text-align: center;
+    }
+
+    .speed-circle {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      border: 5px solid var(--vs-red);
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 8px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: #111;
+      box-shadow: 0 0 12px rgba(255,59,71,0.3);
+    }
+
+    .speed-label {
+      font-size: 11px;
+      color: var(--vs-muted);
+      line-height: 1.4;
+      font-family: 'Share Tech Mono', monospace;
+    }
+
+    /* PRIORITY DIAGRAM */
+    .priority-diagram {
+      background: var(--vs-card);
+      border: 1px solid var(--vs-border);
+      border-radius: 6px;
+      padding: 20px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .prio-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 10px 0;
+      flex-wrap: wrap;
+    }
+
+    .prio-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--vs-border);
+      border-radius: 4px;
+      padding: 10px 16px;
+      font-size: 13px;
+      color: var(--vs-text);
+      font-weight: 500;
+    }
+
+    .prio-item .dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .prio-arrow {
+      color: var(--vs-muted);
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    /* QUIZ */
+    .quiz-q {
+      background: var(--vs-card);
+      border: 1px solid var(--vs-border);
+      border-radius: 6px;
+      padding: 20px;
+      margin-bottom: 14px;
+    }
+
+    .quiz-q-text {
+      font-size: 14px;
+      color: var(--vs-text);
+      font-weight: 500;
+      margin-bottom: 14px;
+      line-height: 1.6;
+    }
+
+    .quiz-q-num {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      color: var(--vs-blue);
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+
+    .quiz-opts {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .quiz-opt {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--vs-border);
+      border-radius: 4px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: var(--vs-muted);
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.18s;
+      font-family: 'Exo 2', sans-serif;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .quiz-opt:hover {
+      border-color: var(--vs-blue);
+      color: var(--vs-text);
+      background: rgba(0,168,255,0.06);
+    }
+
+    .quiz-opt:disabled { cursor: not-allowed; }
+
+    .quiz-opt.correct {
+      border-color: var(--vs-green);
+      background: rgba(0,230,118,0.08);
+      color: var(--vs-green);
+    }
+
+    .quiz-opt.wrong {
+      border-color: var(--vs-red);
+      background: rgba(255,59,71,0.08);
+      color: var(--vs-red);
+    }
+
+    .quiz-opt-key {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--vs-border);
+      padding: 2px 7px;
+      border-radius: 2px;
+      color: var(--vs-muted);
+      flex-shrink: 0;
+    }
+
+    .quiz-feedback {
+      margin-top: 10px;
+      font-size: 13px;
+      padding: 8px 12px;
+      border-radius: 3px;
+      display: none;
+      font-style: italic;
+      color: var(--vs-muted);
+    }
+
+    /* SIGNS GRID */
+    .signs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .sign-item {
+      background: var(--vs-card);
+      border: 1px solid var(--vs-border);
+      border-radius: 6px;
+      padding: 14px 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.18s;
+    }
+
+    .sign-item:hover { border-color: rgba(0,168,255,0.4); }
+
+    .sign-svg { margin-bottom: 8px; }
+
+    .sign-name {
+      font-size: 11px;
+      color: var(--vs-muted);
+      line-height: 1.4;
+      font-family: 'Share Tech Mono', monospace;
+    }
+
+    /* PROGRESS BAR */
+    .prog-track {
+      background: rgba(255,255,255,0.06);
+      border-radius: 2px;
+      height: 3px;
+      margin-top: 20px;
+      overflow: hidden;
+    }
+
+    .prog-fill {
+      height: 100%;
+      background: var(--vs-blue);
+      border-radius: 2px;
+      transition: width 0.4s;
+    }
+
+    /* ALERT BOX */
+    .alert {
+      border-left: 3px solid;
+      border-radius: 0 4px 4px 0;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .alert-warn {
+      border-color: var(--vs-amber);
+      background: rgba(255,193,7,0.07);
+      color: #d4a40b;
+    }
+
+    .alert-info {
+      border-color: var(--vs-blue);
+      background: rgba(0,168,255,0.07);
+      color: var(--vs-blue);
+    }
+
+    .alert-danger {
+      border-color: var(--vs-red);
+      background: rgba(255,59,71,0.07);
+      color: #ff6b6b;
+    }
+
+    .alert-success {
+      border-color: var(--vs-green);
+      background: rgba(0,230,118,0.07);
+      color: var(--vs-green);
+    }
+
+    .alert strong { font-weight: 700; }
+
+    /* TABLE */
+    .vs-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+
+    .vs-table th {
+      background: rgba(0,168,255,0.1);
+      color: var(--vs-blue);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 1px;
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--vs-border);
+      text-transform: uppercase;
+    }
+
+    .vs-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      color: var(--vs-muted);
+      line-height: 1.5;
+    }
+
+    .vs-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+    .vs-table td:first-child { color: var(--vs-text); font-weight: 500; }
+
+    /* CHIP */
+    .chip {
+      display: inline-block;
+      font-size: 10px;
+      font-family: 'Share Tech Mono', monospace;
+      padding: 2px 8px;
+      border-radius: 2px;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+      vertical-align: middle;
+      margin-left: 4px;
+    }
+
+    .chip-blue { background: rgba(0,168,255,0.15); color: var(--vs-blue); border: 1px solid rgba(0,168,255,0.3); }
+    .chip-red { background: rgba(255,59,71,0.15); color: var(--vs-red); border: 1px solid rgba(255,59,71,0.3); }
+    .chip-amber { background: rgba(255,193,7,0.15); color: var(--vs-amber); border: 1px solid rgba(255,193,7,0.3); }
+    .chip-green { background: rgba(0,230,118,0.15); color: var(--vs-green); border: 1px solid rgba(0,230,118,0.3); }
+
+    /* SCORE */
+    .score-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--vs-card);
+      border: 1px solid var(--vs-border);
+      border-radius: 6px;
+      padding: 14px 18px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .score-num {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--vs-cyan);
+      min-width: 56px;
+    }
+
+    .score-label { font-size: 13px; color: var(--vs-muted); }
+
+    .reset-btn {
+      margin-left: auto;
+      background: rgba(0,168,255,0.1);
+      border: 1px solid rgba(0,168,255,0.3);
+      color: var(--vs-blue);
+      padding: 7px 16px;
+      border-radius: 3px;
+      font-family: 'Exo 2', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.18s;
+      letter-spacing: 0.5px;
+    }
+
+    .reset-btn:hover { background: rgba(0,168,255,0.2); }
+
+    /* FOOTER LINK */
+    .source-link {
+      font-size: 11px;
+      color: var(--vs-muted);
+      font-family: 'Share Tech Mono', monospace;
+      border-top: 1px solid var(--vs-border);
+      padding-top: 16px;
+      margin-top: 24px;
+    }
+
+    .source-link a { color: var(--vs-blue); text-decoration: none; }
+    .source-link a:hover { text-decoration: underline; }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .header-title { font-size: 24px; }
+      .nav-tab { font-size: 11px; padding: 6px 10px; }
+      .speed-grid { justify-content: center; }
+      .speed-sign { width: 70px; }
+      .speed-circle { width: 65px; height: 65px; font-size: 20px; }
+      .rule-grid { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+      .score-bar { flex-direction: column; align-items: flex-start; }
+      .reset-btn { margin-left: 0; margin-top: 8px; width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="vs-root">
+    <div class="grid-bg"></div>
+    <div class="scanline"></div>
+
+    <div class="content-wrap">
+      <div class="header">
+        <div class="header-top">
+          <div class="badge-vs">VOID SPACE DOJRP©</div>
+          <div class="header-title"><span>AUTO</span>ŠKOLA AKADEMIE</div>
+        </div>
+        <div class="header-sub">// KOMPLEXNÍ STUDIJNÍ MATERIÁLY · KATEGORIE B · VERZE 2025</div>
+        <div class="header-stats">
+          <div class="hstat"><div class="hstat-dot" style="background:#00e676"></div>6 modulů</div>
+          <div class="hstat"><div class="hstat-dot" style="background:#00a8ff"></div>Dopravní předpisy</div>
+          <div class="hstat"><div class="hstat-dot" style="background:#ffc107"></div>Značky &amp; pravidla</div>
+          <div class="hstat"><div class="hstat-dot" style="background:#ff3b47"></div>Zkušební testy</div>
+        </div>
+        <div class="prog-track"><div class="prog-fill" id="mainprog" style="width:0%"></div></div>
+      </div>
+
+      <div class="nav-tabs">
+        <button class="nav-tab active" onclick="switchTab('pravidla',this)">📋 Pravidla</button>
+        <button class="nav-tab" onclick="switchTab('znacky',this)">🚧 Značky</button>
+        <button class="nav-tab" onclick="switchTab('rychlost',this)">⚡ Rychlost</button>
+        <button class="nav-tab" onclick="switchTab('prednost',this)">🔄 Přednost</button>
+        <button class="nav-tab" onclick="switchTab('vozidlo',this)">🔧 Vozidlo</button>
+        <button class="nav-tab" onclick="switchTab('test',this)">✅ Test</button>
+      </div>
+
+      <!-- ═══ PANEL 1: PRAVIDLA ═══ -->
+      <div id="panel-pravidla" class="panel active">
+        <div class="sec-title">Základy silničního provozu</div>
+
+        <div class="alert alert-info"><strong>Zdroj:</strong> autoskolaradost.cz · Portál eTesty MDCR · Zákon č. 361/2000 Sb.</div>
+
+        <div class="info-card">
+          <div class="info-card-title"><span class="ic-num">01</span> Povinnosti řidiče před jízdou</div>
+          <p>Před každou jízdou musíš zkontrolovat: <strong>technický stav vozidla</strong> (pneumatiky, brzdy, osvětlení, hladiny kapalin), platnost <strong>STK a pojištění</strong>, a svůj <strong>zdravotní stav</strong> — pod vlivem alkoholu nebo léků nesmíš řídit. V ČR platí nulová tolerance alkoholu. Hladina 0,00 ‰.</p>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-title"><span class="ic-num">02</span> Jízda v provozu — základní povinnosti</div>
+          <p>Řidič je <strong>povinen sledovat situaci</strong> před i za vozidlem. Musí dodržovat bezpečný boční i brzdný odstup. Na dálnici jezdíme <strong>vpravo</strong>, levý pruh jen pro předjíždění. Nesmíš používat telefon bez handsfree. <strong>Bezpečnostní pás</strong> je povinný pro všechny.</p>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-title"><span class="ic-num">03</span> Světla vozidla — kdy a jaká</div>
+          <p>
+            <strong>Denní svícení (DRL)</strong> — celý rok povinně.<br>
+            <strong>Potkávací světla</strong> — v tunelu, za mlhy, za špatné viditelnosti &lt; 100 m.<br>
+            <strong>Dálková světla</strong> — mimo obec, jen pokud neoslňuješ protijedoucí.<br>
+            <strong>Výstražná světla</strong> — nehoda, nouzové zastavení, označení překážky.
+          </p>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-title"><span class="ic-num">04</span> Zastavení a stání</div>
+          <p><strong>Zastavení</strong> = krátkodobé přerušení jízdy (do 5 minut, řidič nesmí opustit vozidlo). <strong>Stání</strong> = déle nebo řidič odejde. Zakázáno: na přechodu, v křižovatce, na mostě, před vjezdem, na chodníku bez povolení, do 5 m od přechodu. Vždy stoj <strong>co nejdál vpravo</strong>.</p>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-title"><span class="ic-num">05</span> Předjíždění</div>
+          <p>Předjíždíš <strong>vlevo</strong>. Zakázáno: v zatáčce, za horizontem, na přechodu, kde není dostatečný rozhled, přes plnou čáru. Před předjížděním se ujisti o dostatečném prostoru — pravidlo: pokud vidíš, že ti protijdoucí nestihne uvolnit cestu, <strong>nepředjíždej</strong>. Tramvaj se předjíždí <strong>vpravo</strong>.</p>
+        </div>
+
+        <div class="rule-grid">
+          <div class="rule-box">
+            <span class="rule-box-icon">🚗</span>
+            <h4>Jízdní pruhy</h4>
+            <p>Jeď vpravo. Levý pruh jen k předjíždění nebo odbočení vlevo. Volný pruh nevynechávej zbytečně.</p>
+          </div>
+          <div class="rule-box">
+            <span class="rule-box-icon">🚶</span>
+            <h4>Chodci na přechodu</h4>
+            <p>Chodec na přechodu má vždy přednost. Zastaví i ten, kdo přechod teprve blíží. Pomalá jízda nestačí.</p>
+          </div>
+          <div class="rule-box">
+            <span class="rule-box-icon">🔔</span>
+            <h4>Použití houkačky</h4>
+            <p>Jen při hrozícím nebezpečí. V obci jen výjimečně. Při předjíždění pouze mimo obec a jen nutné.</p>
+          </div>
+          <div class="rule-box">
+            <span class="rule-box-icon">🌧</span>
+            <h4>Za nepříznivého počasí</h4>
+            <p>Sníž rychlost, zvyš brzdnou vzdálenost. Na mokré vozovce brzdná dráha až 2× delší. Aquaplaning — přestaň brzdit.</p>
+          </div>
+        </div>
+
+        <div class="source-link">Zdroj: <a href="https://www.autoskolaradost.cz/studijni-materialy/" target="_blank">autoskolaradost.cz/studijni-materialy</a></div>
+      </div>
+
+      <!-- ═══ PANEL 2: ZNAČKY ═══ -->
+      <div id="panel-znacky" class="panel">
+        <div class="sec-title">Dopravní značky</div>
+
+        <div class="alert alert-info"><strong>Tip:</strong> Značky se dělí na 4 skupiny: výstražné, zákazové, příkazové a informační.</div>
+
+        <div style="margin-bottom:6px;font-size:12px;color:var(--vs-muted);font-family:'Share Tech Mono',monospace;letter-spacing:1px;">VÝSTRAŽNÉ ZNAČKY — žlutý/červený trojúhelník</div>
+        <div class="signs-grid" id="signs-grid"></div>
+
+        <div class="alert alert-warn" style="margin-top:8px"><strong>VÝSTRAŽNÉ</strong> — trojúhelník, červený lem. Upozorňují na nebezpečí. Zpomal a buď připraven zastavit.</div>
+        <div class="alert" style="border-color:#e74c3c;background:rgba(231,76,60,0.07);color:#e74c3c"><strong>ZÁKAZOVÉ</strong> — kruh, červený lem (nebo modrý s červenou). Zakazují určitou činnost. Platí od značky až po konec úseku nebo křižovatku.</div>
+        <div class="alert" style="border-color:#3498db;background:rgba(52,152,219,0.07);color:#74b9ff"><strong>PŘÍKAZOVÉ</strong> — modrý kruh. Přikazují určitou činnost (např. jednosměrný provoz, povinný směr).</div>
+        <div class="alert alert-success"><strong>INFORMAČNÍ</strong> — modrý nebo zelený obdélník/čtverec. Informují o silnici, objektech, místech.</div>
+
+        <table class="vs-table">
+          <thead>
+            <tr><th>Značka</th><th>Název</th><th>Co to znamená v praxi</th><th>Typ</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>P1</td><td>Křižovatka s vedlejší silnicí</td><td>Jsi na vedlejší, dej přednost</td><td><span class="chip chip-amber">VÝSTRAŽNÁ</span></td></tr>
+            <tr><td>P2</td><td>Hlavní silnice</td><td>Jsi na hlavní, máš přednost</td><td><span class="chip chip-blue">INFORMAČNÍ</span></td></tr>
+            <tr><td>P4</td><td>Dej přednost v jízdě</td><td>Povinně zpomal, dej přednost</td><td><span class="chip chip-red">ZÁKAZOVÁ</span></td></tr>
+            <tr><td>P6</td><td>Stůj, dej přednost</td><td>Zastav, pak dej přednost</td><td><span class="chip chip-red">ZÁKAZOVÁ</span></td></tr>
+            <tr><td>B20a</td><td>Nejvyšší dovolená rychlost</td><td>Nesmíš jet rychleji než číslo na značce</td><td><span class="chip chip-red">ZÁKAZOVÁ</span></td></tr>
+            <tr><td>B28</td><td>Zákaz předjíždění</td><td>Nesmíš předjet motorové vozidlo</td><td><span class="chip chip-red">ZÁKAZOVÁ</span></td></tr>
+            <tr><td>C2a</td><td>Přikázaný směr jízdy (rovně)</td><td>Musíš jet rovně</td><td><span class="chip chip-blue">PŘÍKAZOVÁ</span></td></tr>
+            <tr><td>IP10a</td><td>Přechod pro chodce</td><td>Informuje o přechodu, snižte rychlost</td><td><span class="chip chip-blue">INFORMAČNÍ</span></td></tr>
+          </tbody>
+        </table>
+
+        <div class="source-link">Zdroj: <a href="https://www.autoskolaradost.cz/studijni-materialy/" target="_blank">autoskolaradost.cz</a></div>
+      </div>
+
+      <!-- ═══ PANEL 3: RYCHLOST ═══ -->
+      <div id="panel-rychlost" class="panel">
+        <div class="sec-title">Rychlost &amp; brzdné vzdálenosti</div>
+
+        <div class="speed-grid" id="speed-grid"></div>
+
+        <div class="alert alert-warn"><strong>Pozor:</strong> Rychlostní limity jsou maximální! Při mokré vozovce, mlze, zimě nebo hustém provozu musíš jet pomaleji.</div>
+
+        <table class="vs-table">
+          <thead>
+            <tr><th>Místo</th><th>Osobní auto</th><th>Autobus / nákladní</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>V obci</td><td>50 km/h</td><td>50 km/h</td></tr>
+            <tr><td>Mimo obec (silnice)</td><td>90 km/h</td><td>80 km/h</td></tr>
+            <tr><td>Rychlostní silnice (R)</td><td>110 km/h</td><td>80 km/h</td></tr>
+            <tr><td>Dálnice (D)</td><td>130 km/h</td><td>80 km/h</td></tr>
+          </tbody>
+        </table>
+
+        <div class="sec-title" style="margin-top:24px">Brzdné vzdálenosti</div>
+
+        <div id="brake-calc">
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;flex-wrap:wrap">
+            <label style="font-size:13px;color:var(--vs-muted);font-family:'Share Tech Mono',monospace;">RYCHLOST (km/h)</label>
+            <input type="range" min="30" max="130" step="10" value="50" id="speedSlider" style="flex:1;min-width:120px">
+            <span id="speedVal" style="font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:var(--vs-cyan);min-width:60px">50 km/h</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;flex-wrap:wrap">
+            <label style="font-size:13px;color:var(--vs-muted);font-family:'Share Tech Mono',monospace;">POVRCH VOZOVKY</label>
+            <select id="surfaceSelect" style="flex:1;min-width:140px;padding:8px;background:var(--vs-card);border:1px solid var(--vs-border);color:var(--vs-text);border-radius:3px;font-family:'Exo 2',sans-serif">
+              <option value="1.0">Suchý asfalt</option>
+              <option value="1.5">Mokrý asfalt</option>
+              <option value="2.2">Sníh / led</option>
+            </select>
+          </div>
+          <div id="brake-results" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:16px"></div>
+        </div>
+
+        <div class="source-link">Zdroj: <a href="https://www.autoskolaradost.cz/studijni-materialy/" target="_blank">autoskolaradost.cz</a></div>
+      </div>
+
+      <!-- ═══ PANEL 4: PŘEDNOST ═══ -->
+      <div id="panel-prednost" class="panel">
+        <div class="sec-title">Přednost v jízdě</div>
+
+        <div class="alert alert-danger"><strong>Nejčastější chyba na testech!</strong> Přednost zprava platí jen na ROVNOCENNÝCH křižovatkách bez značení.</div>
+
+        <div class="priority-diagram">
+          <p style="font-size:12px;color:var(--vs-muted);font-family:'Share Tech Mono',monospace;letter-spacing:1px;margin-bottom:14px;">POŘADÍ PŘEDNOSTI (od nejvyšší)</p>
+          <div class="prio-row">
+            <div class="prio-item"><div class="dot" style="background:#ff3b47"></div>Pokyn policisty / signalizace</div>
+          </div>
+          <div class="prio-row"><div class="prio-arrow">↓</div></div>
+          <div class="prio-row">
+            <div class="prio-item"><div class="dot" style="background:#ffc107"></div>Světelné signály (semafory)</div>
+          </div>
+          <div class="prio-row"><div class="prio-arrow">↓</div></div>
+          <div class="prio-row">
+            <div class="prio-item"><div class="dot" style="background:#00a8ff"></div>Dopravní značky</div>
+          </div>
+          <div class="prio-row"><div class="prio-arrow">↓</div></div>
+          <div class="prio-row">
+            <div class="prio-item"><div class="dot" style="background:#00e676"></div>Pravidlo "přednost zprava"</div>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-title"><span class="ic-num">→</span> Pravidlo přednosti zprava</div>
+          <p>Na rovnocenné křižovatce má přednost vozidlo přijíždějící <strong>zprava</strong>. Pokud vidíš auto vpravo — dej přednost. Pokud vidíš auto vlevo — ty máš přednost. Tramvaj má VŽDY přednost.</p>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-title"><span class="ic-num">↗</span> Přednost tramvaje</div>
+          <p>Tramvaj má vždy přednost <strong>bez ohledu</strong> na směr jízdy. Vozidla musí umožnit tramvaji plynulou jízdu. Na přejezdech kolejí — zastavit, ujistit se, teprve pak projet.</p>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-title"><span class="ic-num">↻</span> Kruháč (kruhový objezd)</div>
+          <p>V ČR: <strong>vozidla na kruháči mají přednost</strong> před vjíždějícími. Dej přednost vozidlům uvnitř kruhu. Jeď <strong>po směru hodinových ručiček</strong>.</p>
+        </div>
+
+        <div class="source-link">Zdroj: <a href="https://www.autoskolaradost.cz/studijni-materialy/" target="_blank">autoskolaradost.cz</a></div>
+      </div>
+
+      <!-- ═══ PANEL 5: VOZIDLO ═══ -->
+      <div id="panel-vozidlo" class="panel">
+        <div class="sec-title">Vozidlo &amp; bezpečnost</div>
+
+        <div class="rule-grid">
+          <div class="rule-box">
+            <span class="rule-box-icon">🔍</span>
+            <h4>Kontrola před jízdou</h4>
+            <p>Motorový olej (min/max), chladící kapalina, brzdová kapalina, stav pneumatik, funkčnost světel.</p>
+          </div>
+          <div class="rule-box">
+            <span class="rule-box-icon">🛞</span>
+            <h4>Pneumatiky</h4>
+            <p>Letní: hloubka dezénu min. 1,6 mm. Zimní: min. 4 mm (doporučeno). Zimní od 1.11 do 31.3.</p>
+          </div>
+          <div class="rule-box">
+            <span class="rule-box-icon">🚨</span>
+            <h4>Bezpečnostní výbava</h4>
+            <p>Povinně: lékárnička, výstražný trojúhelník, reflexní vesta. Doporučeno: hasicí přístroj.</p>
+          </div>
+          <div class="rule-box">
+            <span class="rule-box-icon">🔐</span>
+            <h4>Bezpečnostní pásy</h4>
+            <p>Povinné pro řidiče i všechny cestující. Děti do 150 cm musí sedět v dětské sedačce.</p>
+          </div>
+          <div class="rule-box">
+            <span class="rule-box-icon">⛽</span>
+            <h4>Palivo &amp; kapaliny</h4>
+            <p>Nikdy nesmíš jet s blikající kontrolkou! Zkontroluj olej každých 1000 km.</p>
+          </div>
+          <div class="rule-box">
+            <span class="rule-box-icon">🌡</span>
+            <h4>Přehřátí motoru</h4>
+            <p>Při červené kontrolce: okamžitě zaparknuj, vypni motor. Neotvírej víko chladiče!</p>
+          </div>
+        </div>
+
+        <div class="sec-title" style="margin-top:8px">Alkohol &amp; drogy za volantem</div>
+
+        <div class="alert alert-danger"><strong>Nulová tolerance alkoholu v ČR!</strong> Hladina 0,00 ‰ za volantem. Přes 0,3 ‰ = přestupek, přes 1,0 ‰ = trestný čin.</div>
+
+        <table class="vs-table">
+          <thead><tr><th>Přestupek</th><th>Pokuta</th><th>Body</th><th>Zákaz řízení</th></tr></thead>
+          <tbody>
+            <tr><td>Alkohol 0,3–0,99 ‰</td><td>2 500–20 000 Kč</td><td>7 bodů</td><td>6–12 měsíců</td></tr>
+            <tr><td>Alkohol 1,0 ‰ a více</td><td>trestní oznámení</td><td>7 bodů</td><td>1–10 let</td></tr>
+            <tr><td>Překročení rychlosti +20 km/h v obci</td><td>2 500–5 000 Kč</td><td>3 body</td><td>ne</td></tr>
+            <tr><td>Nepoužití bezp. pásu</td><td>1 500–3 000 Kč</td><td>3 body</td><td>ne</td></tr>
+            <tr><td>Telefon za volantem</td><td>1 500–2 500 Kč</td><td>3 body</td><td>ne</td></tr>
+          </tbody>
+        </table>
+
+        <div class="source-link">Zdroj: <a href="https://www.autoskolaradost.cz/studijni-materialy/" target="_blank">autoskolaradost.cz</a></div>
+      </div>
+
+      <!-- ═══ PANEL 6: TEST ═══ -->
+      <div id="panel-test" class="panel">
+        <div class="sec-title">Zkušební test — DOJRP</div>
+
+        <div class="score-bar">
+          <div class="score-num" id="score-display">0 / 0</div>
+          <div>
+            <div style="font-size:14px;font-weight:600;color:var(--vs-text)" id="score-pct">Zodpověz otázky</div>
+            <div class="score-label">Správné odpovědi</div>
+          </div>
+          <button class="reset-btn" onclick="resetTest()">↺ Reset testu</button>
+        </div>
+
+        <div id="quiz-container"></div>
+
+        <div class="source-link">Otázky vycházejí z <a href="https://etesty2.mdcr.cz" target="_blank">etesty2.mdcr.cz</a></div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const tabs = ['pravidla','znacky','rychlost','prednost','vozidlo','test'];
+    let visited = new Set(['pravidla']);
+
+    function switchTab(id, btn) {
+      tabs.forEach(t => {
+        document.getElementById('panel-'+t).classList.remove('active');
+      });
+      document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+      document.getElementById('panel-'+id).classList.add('active');
+      btn.classList.add('active');
+      visited.add(id);
+      document.getElementById('mainprog').style.width = (visited.size / tabs.length * 100) + '%';
+    }
+
+    /* ─── SPEED SIGNS ─── */
+    const speeds = [
+      { v: 30, label: 'Zóna 30\nobec' },
+      { v: 50, label: 'V obci\nstandard' },
+      { v: 90, label: 'Mimo obec\nsilnice' },
+      { v: 110, label: 'Rychlostní\nsilnice' },
+      { v: 130, label: 'Dálnice\nmax' },
+    ];
+    const sg = document.getElementById('speed-grid');
+    if(sg) speeds.forEach(s => {
+      sg.innerHTML += `<div class="speed-sign">
+        <div class="speed-circle">${s.v}</div>
+        <div class="speed-label">${s.label.replace(/\n/g,'<br>')}</div>
+      </div>`;
+    });
+
+    /* ─── SIGNS SVG ─── */
+    const signs = [
+      { name: 'Výstražný\ntrojúhelník', svg: `<svg width="56" height="56" viewBox="0 0 56 56"><polygon points="28,4 52,50 4,50" fill="#ffdd00" stroke="#e74c3c" stroke-width="3"/><text x="28" y="42" text-anchor="middle" font-size="20" fill="#333">!</text></svg>` },
+      { name: 'Stopka\nP6', svg: `<svg width="56" height="56" viewBox="0 0 56 56"><polygon points="21,4 35,4 52,21 52,35 35,52 21,52 4,35 4,21" fill="#e74c3c"/><text x="28" y="33" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">STOP</text></svg>` },
+      { name: 'Dej přednost\nP4', svg: `<svg width="56" height="56" viewBox="0 0 56 56"><polygon points="28,52 52,8 4,8" fill="#fff" stroke="#e74c3c" stroke-width="3"/></svg>` },
+      { name: 'Hlavní silnice\nP2', svg: `<svg width="56" height="56" viewBox="0 0 56 56"><polygon points="28,6 50,28 28,50 6,28" fill="#ffcc00" stroke="#333" stroke-width="2"/></svg>` },
+      { name: 'Zákaz vstupu\nB2', svg: `<svg width="56" height="56" viewBox="0 0 56 56"><circle cx="28" cy="28" r="24" fill="#e74c3c"/><rect x="8" y="24" width="40" height="8" fill="#fff" rx="2"/></svg>` },
+      { name: 'Přikázaný\nsměr jízdy', svg: `<svg width="56" height="56" viewBox="0 0 56 56"><circle cx="28" cy="28" r="24" fill="#3498db"/><polygon points="28,12 42,32 14,32" fill="#fff"/></svg>` },
+    ];
+    const gr = document.getElementById('signs-grid');
+    if(gr) signs.forEach(s => {
+      gr.innerHTML += `<div class="sign-item"><div class="sign-svg">${s.svg}</div><div class="sign-name">${s.name.replace(/\n/g,'<br>')}</div></div>`;
+    });
+
+    /* ─── BRAKE CALC ─── */
+    function updateBrake() {
+      const spd = parseInt(document.getElementById('speedSlider').value);
+      const mult = parseFloat(document.getElementById('surfaceSelect').value);
+      document.getElementById('speedVal').textContent = spd + ' km/h';
+      const reaction = Math.round(spd * 0.83 * mult * 10) / 10;
+      const brake = Math.round((spd * spd) / (2 * 7.85) * mult * 10) / 10;
+      const total = Math.round((reaction + brake) * 10) / 10;
+      document.getElementById('brake-results').innerHTML = `
+        <div class="info-card" style="margin:0"><div class="info-card-title"><span class="ic-num">👁</span> Reakční dráha</div><p><strong style="font-size:20px;color:#00e5ff">${reaction} m</strong><br>Doba ~1 s</p></div>
+        <div class="info-card" style="margin:0"><div class="info-card-title"><span class="ic-num">🛑</span> Brzdná dráha</div><p><strong style="font-size:20px;color:#ffc107">${brake} m</strong><br>Závisí na povrchu</p></div>
+        <div class="info-card" style="margin:0"><div class="info-card-title"><span class="ic-num">📏</span> Celková zastavovací</div><p><strong style="font-size:20px;color:#ff3b47">${total} m</strong><br>= reakční + brzdná</p></div>
+      `;
+    }
+    const ss = document.getElementById('speedSlider');
+    const sc = document.getElementById('surfaceSelect');
+    if(ss) { ss.addEventListener('input', updateBrake); sc.addEventListener('change', updateBrake); updateBrake(); }
+
+    /* ─── QUIZ ─── */
+    const questions = [
+      { q: "Jaká je maximální povolená rychlost v obci, pokud není uvedena jiná?", opts: ["90 km/h","50 km/h","70 km/h","30 km/h"], ans: 1, hint: "V obci je základní rychlostní limit 50 km/h. Může být snížen na 30 km/h v zóně 30." },
+      { q: "Na rovnocenné křižovatce bez dopravního značení. Zprava přijíždí vozidlo. Kdo má přednost?", opts: ["Ty, protože jedeš rovně","Vozidlo zprava má přednost","Větší vozidlo má přednost","Ten, kdo přijel jako první"], ans: 1, hint: "Pravidlo přednosti zprava — vozidlo přijíždějící zprava má vždy přednost na rovnocenné křižovatce." },
+      { q: "Jak daleko před přechodem pro chodce je zakázáno zastavit?", opts: ["10 m","5 m","15 m","20 m"], ans: 1, hint: "Do 5 metrů před přechodem i za ním nesmíš stát ani zastavit." },
+      { q: "Při jaké hladině alkoholu se jedná o trestný čin v ČR?", opts: ["0,5 ‰","0,8 ‰","1,0 ‰ a více","0,3 ‰"], ans: 2, hint: "Trestný čin nastupuje od 1,0 ‰ alkoholu v krvi." },
+      { q: "Kde se tramvaj předjíždí?", opts: ["Vlevo, jako ostatní vozidla","Vpravo, pokud to je bezpečné","Vždy vpravo bez výjimky","Tramvaj se nepředjíždí nikdy"], ans: 1, hint: "Tramvaj se předjíždí vpravo." },
+      { q: "Co musíš udělat, když přijíždíš ke stopce (značka P6)?", opts: ["Zpomalit a dát přednost","Zastavit, pak dát přednost","Zastavit a čekat","Projet pomalu, pokud nikdo nejede"], ans: 1, hint: "Stopka = VŽDY musíš fyzicky zastavit, i když je volno." },
+      { q: "Jaká minimální hloubka dezénu je předepsána pro letní pneumatiky?", opts: ["3 mm","1,6 mm","4 mm","2 mm"], ans: 1, hint: "Zákonné minimum pro letní pneumatiky je 1,6 mm." },
+      { q: "Komu musíš vždy dát přednost při odbočování vlevo?", opts: ["Jen protijedoucím vozidlům","Protijedoucím vozidlům i chodcům","Jen chodcům na přechodu","Nikomu, pokud máš zelenou"], ans: 1, hint: "Při odbočování vlevo dáváš přednost všem protijedoucím vozidlům i chodcům." },
+    ];
+
+    let scores = { right: 0, total: 0, answered: {} };
+
+    function buildQuiz() {
+      const c = document.getElementById('quiz-container');
+      if(!c) return;
+      c.innerHTML = '';
+      questions.forEach((q, i) => {
+        let optHtml = q.opts.map((o, j) => `<button class="quiz-opt" onclick="answer(${i},${j})" id="opt-${i}-${j}"><span class="quiz-opt-key">${['A','B','C','D'][j]}</span>${o}</button>`).join('');
+        c.innerHTML += `<div class="quiz-q">
+          <div class="quiz-q-num">// OTÁZKA ${String(i+1).padStart(2,'0')} Z ${questions.length}</div>
+          <div class="quiz-q-text">${q.q}</div>
+          <div class="quiz-opts">${optHtml}</div>
+          <div class="quiz-feedback" id="fb-${i}"></div>
+        </div>`;
+      });
+      updateScore();
+    }
+
+    function answer(qi, oi) {
+      if(scores.answered[qi] !== undefined) return;
+      scores.answered[qi] = oi;
+      const correct = questions[qi].ans === oi;
+      if(correct) scores.right++;
+      scores.total++;
+      const fb = document.getElementById('fb-'+qi);
+      fb.style.display = 'block';
+      fb.textContent = correct ? '✓ Správně! ' + questions[qi].hint : '✗ Špatně. Správná odpověď: ' + questions[qi].opts[questions[qi].ans] + ' · ' + questions[qi].hint;
+      fb.style.color = correct ? 'var(--vs-green)' : 'var(--vs-red)';
+      questions[qi].opts.forEach((_, j) => {
+        const btn = document.getElementById(`opt-${qi}-${j}`);
+        if(j === questions[qi].ans) btn.classList.add('correct');
+        else if(j === oi && !correct) btn.classList.add('wrong');
+        btn.disabled = true;
+      });
+      updateScore();
+    }
+
+    function updateScore() {
+      document.getElementById('score-display').textContent = scores.right + ' / ' + scores.total;
+      if(scores.total > 0) {
+        const pct = Math.round(scores.right/scores.total*100);
+        const el = document.getElementById('score-pct');
+        el.textContent = pct + '% úspěšnost' + (pct >= 80 ? ' 🎉 PROŠEL!' : pct >= 50 ? ' — slušný výsledek' : ' — zapracuj na tom');
+        el.style.color = pct >= 80 ? 'var(--vs-green)' : pct >= 50 ? 'var(--vs-amber)' : 'var(--vs-red)';
+      }
+    }
+
+    function resetTest() {
+      scores = { right: 0, total: 0, answered: {} };
+      buildQuiz();
+    }
+
+    buildQuiz();
+  </script>
+</body>
+</html>
